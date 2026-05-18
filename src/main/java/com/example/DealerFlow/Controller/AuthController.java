@@ -1,8 +1,8 @@
 package com.example.DealerFlow.Controller;
 
 import com.example.DealerFlow.Service.AuthService;
-import com.example.DealerFlow.dto.AuthResponse;
-import com.example.DealerFlow.dto.LoginRequest;
+import com.example.DealerFlow.Dto.AuthResponse;
+import com.example.DealerFlow.Dto.LoginRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

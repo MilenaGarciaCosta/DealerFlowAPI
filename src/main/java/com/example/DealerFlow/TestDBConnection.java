@@ -12,11 +12,11 @@ public class TestDBConnection {
                     "root"
             );
 
-            System.out.println("Conectado com sucesso!");
+            System.out.println("Connection stablished!");
             conn.close();
 
         } catch (Exception ex){
-            ex.printStackTrace();
+            System.out.println("Connection failed :(");
         }
     }
 }

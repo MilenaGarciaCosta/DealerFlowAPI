@@ -6,18 +6,20 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
-    private final UserRepository repo;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repo, PasswordEncoder passwordEncoder) {
-        this.repo = repo;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public User createUser(User user){
-        boolean emailExists = repo.existsByEmail(user.getEmail());
+        boolean emailExists = userRepository.existsByEmail(user.getEmail());
 
         if(emailExists){
             throw new BadCredentialsException("Email is already registered");
@@ -27,11 +29,10 @@ public class UserService {
 
         user.setPassword(encryptedPassword);
 
-        return repo.save(user);
+        return userRepository.save(user);
     }
 
-    public User findByEmail(String email) {
-        return repo.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

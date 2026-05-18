@@ -1,4 +1,4 @@
-package com.example.DealerFlow.security;
+package com.example.DealerFlow.Security;
 
 import com.example.DealerFlow.Domain.User;
 import com.example.DealerFlow.Repository.UserRepository;

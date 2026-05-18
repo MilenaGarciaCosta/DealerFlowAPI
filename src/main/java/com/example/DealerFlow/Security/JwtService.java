@@ -1,4 +1,4 @@
-package com.example.DealerFlow.security;
+package com.example.DealerFlow.Security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

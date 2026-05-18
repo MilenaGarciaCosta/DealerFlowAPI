@@ -2,12 +2,14 @@ package com.example.DealerFlow.Service;
 
 import com.example.DealerFlow.Domain.User;
 import com.example.DealerFlow.Repository.UserRepository;
-import com.example.DealerFlow.dto.AuthResponse;
-import com.example.DealerFlow.dto.LoginRequest;
-import com.example.DealerFlow.security.JwtService;
+import com.example.DealerFlow.Dto.AuthResponse;
+import com.example.DealerFlow.Dto.LoginRequest;
+import com.example.DealerFlow.Security.JwtService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -27,10 +29,10 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
+                .orElseThrow(() -> new BadCredentialsException("No user registered for this email address"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Invalid email or password");
+            throw new BadCredentialsException("Wrong password");
         }
 
         String token = jwtService.generateToken(user.getEmail(), user.getId());

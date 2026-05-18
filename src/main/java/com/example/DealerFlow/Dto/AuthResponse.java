@@ -1,4 +1,6 @@
-package com.example.DealerFlow.dto;
+package com.example.DealerFlow.Dto;
+
+import jakarta.validation.constraints.NotBlank;
 
 public class AuthResponse {
 

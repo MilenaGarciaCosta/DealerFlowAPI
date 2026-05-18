@@ -1,4 +1,4 @@
-package com.example.DealerFlow.dto;
+package com.example.DealerFlow.Dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
