@@ -2,6 +2,7 @@ package com.example.DealerFlow.Service;
 
 import com.example.DealerFlow.Domain.User;
 import com.example.DealerFlow.Repository.UserRepository;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class UserService {
         boolean emailExists = repo.existsByEmail(user.getEmail());
 
         if(emailExists){
-            throw new RuntimeException("Email already exists");
+            throw new BadCredentialsException("Email is already registered");
         }
 
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
