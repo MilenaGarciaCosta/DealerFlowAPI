@@ -1,6 +1,6 @@
 package com.example.DealerFlow.Service;
 
-import com.example.DealerFlow.Domain.User;
+import com.example.DealerFlow.Model.User;
 import com.example.DealerFlow.Repository.UserRepository;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;

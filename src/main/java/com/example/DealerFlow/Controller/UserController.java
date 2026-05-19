@@ -1,6 +1,7 @@
 package com.example.DealerFlow.Controller;
 
-import com.example.DealerFlow.Domain.User;
+import com.example.DealerFlow.Model.User;
+import com.example.DealerFlow.Dto.UserDto;
 import com.example.DealerFlow.Service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,15 +21,15 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody User user) {
         User createdUser = userService.createUser(user);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.from(createdUser));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal UserDetails principal) {
-        User user = userService.findByEmail(principal.getUsername()).orElseThrow(() -> new BadCredentialsException("User not found"));
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserDto> getCurrentUser(@AuthenticationPrincipal UserDetails principal) {
+        User user = userService.findByEmail(principal.getUsername())
+                .orElseThrow(() -> new BadCredentialsException("User not found"));
+        return ResponseEntity.ok(UserDto.from(user));
     }
 }

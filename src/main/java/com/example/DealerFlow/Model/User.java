@@ -1,4 +1,4 @@
-package com.example.DealerFlow.Domain;
+package com.example.DealerFlow.Model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;

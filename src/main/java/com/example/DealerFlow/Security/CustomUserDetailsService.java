@@ -1,6 +1,6 @@
 package com.example.DealerFlow.Security;
 
-import com.example.DealerFlow.Domain.User;
+import com.example.DealerFlow.Model.User;
 import com.example.DealerFlow.Repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

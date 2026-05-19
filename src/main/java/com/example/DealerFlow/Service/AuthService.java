@@ -1,15 +1,14 @@
 package com.example.DealerFlow.Service;
 
-import com.example.DealerFlow.Domain.User;
+import com.example.DealerFlow.Model.User;
 import com.example.DealerFlow.Repository.UserRepository;
 import com.example.DealerFlow.Dto.AuthResponse;
 import com.example.DealerFlow.Dto.LoginRequest;
+import com.example.DealerFlow.Dto.UserDto;
 import com.example.DealerFlow.Security.JwtService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -36,12 +35,6 @@ public class AuthService {
         }
 
         String token = jwtService.generateToken(user.getEmail(), user.getId());
-        AuthResponse.UserSummary summary = new AuthResponse.UserSummary(
-                user.getId(),
-                user.getName(),
-                user.getEmail()
-        );
-
-        return new AuthResponse(token, summary);
+        return new AuthResponse(token, UserDto.from(user));
     }
 }

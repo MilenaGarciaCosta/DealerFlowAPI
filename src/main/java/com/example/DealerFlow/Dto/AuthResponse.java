@@ -1,13 +1,11 @@
 package com.example.DealerFlow.Dto;
 
-import jakarta.validation.constraints.NotBlank;
-
 public class AuthResponse {
 
     private String token;
-    private UserSummary user;
+    private UserDto user;
 
-    public AuthResponse(String token, UserSummary user) {
+    public AuthResponse(String token, UserDto user) {
         this.token = token;
         this.user = user;
     }
@@ -20,47 +18,11 @@ public class AuthResponse {
         this.token = token;
     }
 
-    public UserSummary getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public void setUser(UserSummary user) {
+    public void setUser(UserDto user) {
         this.user = user;
-    }
-
-    public static class UserSummary {
-        private Integer id;
-        private String name;
-        private String email;
-
-        public UserSummary(Integer id, String name, String email) {
-            this.id = id;
-            this.name = name;
-            this.email = email;
-        }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
     }
 }

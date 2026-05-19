@@ -1,4 +1,4 @@
-package com.example.DealerFlow.Domain.Endcoder;
+package com.example.DealerFlow.Security.Endcoder;
 
 import com.example.DealerFlow.Security.JsonAuthenticationEntryPoint;
 import com.example.DealerFlow.Security.JwtAuthenticationFilter;
