@@ -1,7 +1,6 @@
 package com.example.DealerFlow.Service;
 
 import com.example.DealerFlow.Dto.DealerAnalytics;
-import com.example.DealerFlow.Dto.DealerAnalyticsResponse;
 import com.example.DealerFlow.Dto.ServiceAnalytics;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -88,32 +87,25 @@ public class DealerService {
         return result;
     }
 
-    public DealerAnalyticsResponse buildAnalytics(List<String> dealerCodes) {
-        List<DealerAnalytics> dealerList = new ArrayList<>();
-        Set<Integer> allServiceCodes = new HashSet<>();
+    public DealerAnalytics buildAnalyticsForDealer(String dealerCode) {
+        List<ServiceAnalytics> topServices = getTopServicesForDealer(dealerCode);
 
-        Map<String, List<ServiceAnalytics>> dealerServicesMap = new LinkedHashMap<>();
-        for (String code : dealerCodes) {
-            List<ServiceAnalytics> topServices = getTopServicesForDealer(code);
-            dealerServicesMap.put(code, topServices);
-            topServices.forEach(s -> allServiceCodes.add(s.getServiceCode()));
-        }
+        List<Integer> codes = topServices.stream()
+                .map(ServiceAnalytics::getServiceCode)
+                .toList();
 
-        Map<Integer, Double> globalAverages = getGlobalAverages(new ArrayList<>(allServiceCodes));
+        Map<Integer, Double> globalAverages = getGlobalAverages(codes);
 
-        for (Map.Entry<String, List<ServiceAnalytics>> entry : dealerServicesMap.entrySet()) {
-            List<ServiceAnalytics> enriched = entry.getValue().stream()
-                    .map(s -> new ServiceAnalytics(
-                            s.getServiceCode(),
-                            s.getServiceDescription(),
-                            s.getServiceCount(),
-                            s.getAverageDays(),
-                            globalAverages.getOrDefault(s.getServiceCode(), 0.0)
-                    ))
-                    .toList();
-            dealerList.add(new DealerAnalytics(entry.getKey(), enriched));
-        }
+        List<ServiceAnalytics> enriched = topServices.stream()
+                .map(s -> new ServiceAnalytics(
+                        s.getServiceCode(),
+                        s.getServiceDescription(),
+                        s.getServiceCount(),
+                        s.getAverageDays(),
+                        globalAverages.getOrDefault(s.getServiceCode(), 0.0)
+                ))
+                .toList();
 
-        return new DealerAnalyticsResponse(dealerList);
+        return new DealerAnalytics(dealerCode, enriched);
     }
 }

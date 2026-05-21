@@ -1,49 +1,33 @@
 package com.example.DealerFlow.Controller;
 
-import com.example.DealerFlow.Dto.DealerAnalyticsRequest;
-import com.example.DealerFlow.Dto.DealerAnalyticsResponse;
-import com.example.DealerFlow.Model.User;
+import com.example.DealerFlow.Dto.DealerAnalytics;
 import com.example.DealerFlow.Service.DealerService;
-import com.example.DealerFlow.Service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/dealer")
 public class DealerController {
 
-    private final DealerService dealerService;
-    private final UserService userService;
+    private static final Logger log = LoggerFactory.getLogger(DealerController.class);
 
-    public DealerController(DealerService dealerService, UserService userService) {
+    private final DealerService dealerService;
+
+    public DealerController(DealerService dealerService) {
         this.dealerService = dealerService;
-        this.userService = userService;
     }
 
-    @PostMapping("/analytics")
-    public ResponseEntity<DealerAnalyticsResponse> getAnalytics(
-            @RequestBody(required = false) DealerAnalyticsRequest request,
-            @AuthenticationPrincipal UserDetails principal) {
+    @GetMapping("/analytics/{dealerCode}")
+    public ResponseEntity<DealerAnalytics> getAnalytics(@PathVariable String dealerCode) {
 
-        List<String> dealerCodes = (request != null) ? request.getDealerCodes() : null;
+        log.info("GET /dealer/analytics/{}", dealerCode);
 
-        if (dealerCodes == null || dealerCodes.isEmpty()) {
-            User user = userService.findByEmail(principal.getUsername())
-                    .orElseThrow(() -> new BadCredentialsException("User not found"));
+        DealerAnalytics result = dealerService.buildAnalyticsForDealer(dealerCode);
 
-            if ("manager".equalsIgnoreCase(user.getCategory()) && user.getDealer() != null) {
-                dealerCodes = List.of(user.getDealer());
-            } else {
-                dealerCodes = dealerService.getAllDealerCodes();
-            }
-        }
+        log.info("Returning {} services for dealer {}", result.getTopServices().size(), dealerCode);
 
-        DealerAnalyticsResponse response = dealerService.buildAnalytics(dealerCodes);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(result);
     }
 }
