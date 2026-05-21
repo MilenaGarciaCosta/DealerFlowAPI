@@ -4,20 +4,18 @@ public class ServiceAnalytics {
 
     private int serviceCode;
     private String serviceDescription;
-    private long serviceCount;
-    private double averageDays;
-    private double globalAverageDays;
+    private int averageHours;
+    private int globalAverageHours;
 
     public ServiceAnalytics() {
     }
 
-    public ServiceAnalytics(int serviceCode, String serviceDescription, long serviceCount,
-                            double averageDays, double globalAverageDays) {
+    public ServiceAnalytics(int serviceCode, String serviceDescription,
+                            int averageHours, int globalAverageHours) {
         this.serviceCode = serviceCode;
         this.serviceDescription = serviceDescription;
-        this.serviceCount = serviceCount;
-        this.averageDays = averageDays;
-        this.globalAverageDays = globalAverageDays;
+        this.averageHours = averageHours;
+        this.globalAverageHours = globalAverageHours;
     }
 
     public int getServiceCode() {
@@ -36,27 +34,19 @@ public class ServiceAnalytics {
         this.serviceDescription = serviceDescription;
     }
 
-    public long getServiceCount() {
-        return serviceCount;
+    public int getAverageHours() {
+        return averageHours;
     }
 
-    public void setServiceCount(long serviceCount) {
-        this.serviceCount = serviceCount;
+    public void setAverageHours(int averageHours) {
+        this.averageHours = averageHours;
     }
 
-    public double getAverageDays() {
-        return averageDays;
+    public int getGlobalAverageHours() {
+        return globalAverageHours;
     }
 
-    public void setAverageDays(double averageDays) {
-        this.averageDays = averageDays;
-    }
-
-    public double getGlobalAverageDays() {
-        return globalAverageDays;
-    }
-
-    public void setGlobalAverageDays(double globalAverageDays) {
-        this.globalAverageDays = globalAverageDays;
+    public void setGlobalAverageHours(int globalAverageHours) {
+        this.globalAverageHours = globalAverageHours;
     }
 }

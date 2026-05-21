@@ -39,7 +39,7 @@ public class DealerService {
                 SELECT d.ServiceCode, s.description,
                        COUNT(*) AS serviceCount,
                        AVG(DATEDIFF(STR_TO_DATE(d.ServiceClosedDate, '%m/%d/%Y'),
-                                     STR_TO_DATE(d.ServiceOpenDate, '%m/%d/%Y'))) AS averageDays
+                                     STR_TO_DATE(d.ServiceOpenDate, '%m/%d/%Y'))) * 24 AS averageHours
                 FROM dealer_code_ml d
                 JOIN servicecode s ON d.ServiceCode = s.code
                 WHERE d.DealerCode = ?
@@ -53,13 +53,12 @@ public class DealerService {
         return jdbcTemplate.query(sql, (rs, rowNum) -> new ServiceAnalytics(
                 rs.getInt("ServiceCode"),
                 rs.getString("description"),
-                rs.getLong("serviceCount"),
-                rs.getDouble("averageDays"),
-                0.0
+                rs.getInt("averageHours"),
+                0
         ), dealerCode);
     }
 
-    public Map<Integer, Double> getGlobalAverages(List<Integer> serviceCodes) {
+    public Map<Integer, Integer> getGlobalAverages(List<Integer> serviceCodes) {
         if (serviceCodes == null || serviceCodes.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -71,7 +70,7 @@ public class DealerService {
         String sql = """
                 SELECT ServiceCode,
                        AVG(DATEDIFF(STR_TO_DATE(ServiceClosedDate, '%%m/%%d/%%Y'),
-                                     STR_TO_DATE(ServiceOpenDate, '%%m/%%d/%%Y'))) AS globalAverageDays
+                                     STR_TO_DATE(ServiceOpenDate, '%%m/%%d/%%Y'))) * 24 AS globalAverageHours
                 FROM dealer_code_ml
                 WHERE ServiceCode IN (%s)
                   AND ServiceClosedDate IS NOT NULL AND ServiceClosedDate <> ''
@@ -79,9 +78,9 @@ public class DealerService {
                 GROUP BY ServiceCode
                 """.formatted(placeholders);
 
-        Map<Integer, Double> result = new HashMap<>();
+        Map<Integer, Integer> result = new HashMap<>();
         jdbcTemplate.query(sql, rs -> {
-            result.put(rs.getInt("ServiceCode"), rs.getDouble("globalAverageDays"));
+            result.put(rs.getInt("ServiceCode"), rs.getInt("globalAverageHours"));
         }, serviceCodes.toArray());
 
         return result;
@@ -94,15 +93,14 @@ public class DealerService {
                 .map(ServiceAnalytics::getServiceCode)
                 .toList();
 
-        Map<Integer, Double> globalAverages = getGlobalAverages(codes);
+        Map<Integer, Integer> globalAverages = getGlobalAverages(codes);
 
         List<ServiceAnalytics> enriched = topServices.stream()
                 .map(s -> new ServiceAnalytics(
                         s.getServiceCode(),
                         s.getServiceDescription(),
-                        s.getServiceCount(),
-                        s.getAverageDays(),
-                        globalAverages.getOrDefault(s.getServiceCode(), 0.0)
+                        s.getAverageHours(),
+                        globalAverages.getOrDefault(s.getServiceCode(), 0)
                 ))
                 .toList();
 
