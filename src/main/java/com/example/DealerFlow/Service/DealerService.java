@@ -1,7 +1,13 @@
 package com.example.DealerFlow.Service;
 
+import com.example.DealerFlow.Dto.DealerAnalytics;
+import com.example.DealerFlow.Dto.DealerAnalyticsResponse;
+import com.example.DealerFlow.Dto.ServiceAnalytics;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DealerService {
@@ -22,5 +28,92 @@ public class DealerService {
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, dealerCode);
 
         return count != null && count > 0;
+    }
+
+    public List<String> getAllDealerCodes() {
+        String sql = "SELECT DISTINCT DealerCode FROM dealer_code_ml";
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
+
+    public List<ServiceAnalytics> getTopServicesForDealer(String dealerCode) {
+        String sql = """
+                SELECT d.ServiceCode, s.description,
+                       COUNT(*) AS serviceCount,
+                       AVG(DATEDIFF(STR_TO_DATE(d.ServiceClosedDate, '%m/%d/%Y'),
+                                     STR_TO_DATE(d.ServiceOpenDate, '%m/%d/%Y'))) AS averageDays
+                FROM dealer_code_ml d
+                JOIN servicecode s ON d.ServiceCode = s.code
+                WHERE d.DealerCode = ?
+                  AND d.ServiceClosedDate IS NOT NULL AND d.ServiceClosedDate <> ''
+                  AND d.ServiceOpenDate IS NOT NULL AND d.ServiceOpenDate <> ''
+                GROUP BY d.ServiceCode, s.description
+                ORDER BY serviceCount DESC
+                LIMIT 3
+                """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new ServiceAnalytics(
+                rs.getInt("ServiceCode"),
+                rs.getString("description"),
+                rs.getLong("serviceCount"),
+                rs.getDouble("averageDays"),
+                0.0
+        ), dealerCode);
+    }
+
+    public Map<Integer, Double> getGlobalAverages(List<Integer> serviceCodes) {
+        if (serviceCodes == null || serviceCodes.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        String placeholders = serviceCodes.stream()
+                .map(c -> "?")
+                .collect(Collectors.joining(", "));
+
+        String sql = """
+                SELECT ServiceCode,
+                       AVG(DATEDIFF(STR_TO_DATE(ServiceClosedDate, '%%m/%%d/%%Y'),
+                                     STR_TO_DATE(ServiceOpenDate, '%%m/%%d/%%Y'))) AS globalAverageDays
+                FROM dealer_code_ml
+                WHERE ServiceCode IN (%s)
+                  AND ServiceClosedDate IS NOT NULL AND ServiceClosedDate <> ''
+                  AND ServiceOpenDate IS NOT NULL AND ServiceOpenDate <> ''
+                GROUP BY ServiceCode
+                """.formatted(placeholders);
+
+        Map<Integer, Double> result = new HashMap<>();
+        jdbcTemplate.query(sql, rs -> {
+            result.put(rs.getInt("ServiceCode"), rs.getDouble("globalAverageDays"));
+        }, serviceCodes.toArray());
+
+        return result;
+    }
+
+    public DealerAnalyticsResponse buildAnalytics(List<String> dealerCodes) {
+        List<DealerAnalytics> dealerList = new ArrayList<>();
+        Set<Integer> allServiceCodes = new HashSet<>();
+
+        Map<String, List<ServiceAnalytics>> dealerServicesMap = new LinkedHashMap<>();
+        for (String code : dealerCodes) {
+            List<ServiceAnalytics> topServices = getTopServicesForDealer(code);
+            dealerServicesMap.put(code, topServices);
+            topServices.forEach(s -> allServiceCodes.add(s.getServiceCode()));
+        }
+
+        Map<Integer, Double> globalAverages = getGlobalAverages(new ArrayList<>(allServiceCodes));
+
+        for (Map.Entry<String, List<ServiceAnalytics>> entry : dealerServicesMap.entrySet()) {
+            List<ServiceAnalytics> enriched = entry.getValue().stream()
+                    .map(s -> new ServiceAnalytics(
+                            s.getServiceCode(),
+                            s.getServiceDescription(),
+                            s.getServiceCount(),
+                            s.getAverageDays(),
+                            globalAverages.getOrDefault(s.getServiceCode(), 0.0)
+                    ))
+                    .toList();
+            dealerList.add(new DealerAnalytics(entry.getKey(), enriched));
+        }
+
+        return new DealerAnalyticsResponse(dealerList);
     }
 }
