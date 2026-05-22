@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/data")
+@RequestMapping("/car-data")
 public class CarModelDataController {
 
     private static final Logger log = LoggerFactory.getLogger(CarModelDataController.class);
@@ -22,6 +23,13 @@ public class CarModelDataController {
 
     public CarModelDataController(CarModelDataService carModelDataService) {
         this.carModelDataService = carModelDataService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<String>> getAllCarModelNames(){
+        List<String> allCarModelNames = carModelDataService.getAllCarModelNames();
+
+        return ResponseEntity.ok(allCarModelNames);
     }
 
     @GetMapping("/{model}/{year}")

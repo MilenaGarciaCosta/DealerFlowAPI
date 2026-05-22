@@ -134,4 +134,8 @@ public class CarModelDataService {
     public long getScheduledCount(Integer modelId, Integer modelYear) {
         return repository.countByModelIdAndModelYearAndIsAgendaSchedule(modelId, modelYear, 1);
     }
+
+    public List<String> getAllCarModelNames(){
+        return repository.finAllModelNameValues();
+    }
 }
