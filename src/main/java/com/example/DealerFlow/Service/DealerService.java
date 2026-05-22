@@ -36,7 +36,7 @@ public class DealerService {
 
     public List<ServiceAnalytics> getTopServicesForDealer(String dealerCode) {
         String sql = """
-                SELECT d.ServiceCode, s.description,
+                SELECT d.ServiceCode, s.ShortDescription,
                        COUNT(*) AS serviceCount,
                        AVG(DATEDIFF(STR_TO_DATE(d.ServiceClosedDate, '%m/%d/%Y'),
                                      STR_TO_DATE(d.ServiceOpenDate, '%m/%d/%Y'))) * 24 AS averageHours
@@ -45,14 +45,14 @@ public class DealerService {
                 WHERE d.DealerCode = ?
                   AND d.ServiceClosedDate IS NOT NULL AND d.ServiceClosedDate <> ''
                   AND d.ServiceOpenDate IS NOT NULL AND d.ServiceOpenDate <> ''
-                GROUP BY d.ServiceCode, s.description
+                GROUP BY d.ServiceCode, s.ShortDescription
                 ORDER BY serviceCount DESC
                 LIMIT 3
                 """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new ServiceAnalytics(
                 rs.getInt("ServiceCode"),
-                rs.getString("description"),
+                rs.getString("ShortDescription"),
                 rs.getInt("averageHours"),
                 0
         ), dealerCode);

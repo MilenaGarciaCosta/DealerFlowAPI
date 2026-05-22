@@ -61,19 +61,19 @@ public class CarModelDataService {
 
     public List<ModelServiceAnalytics> getTopServicesForModel(Integer modelId, Integer modelYear) {
         String sql = """
-                SELECT d.ServiceCode, s.description,
+                SELECT d.ServiceCode, s.ShortDescription,
                        COUNT(*) AS serviceCount
                 FROM dealer_code_ml d
                 JOIN servicecode s ON d.ServiceCode = s.code
                 WHERE d.ModelName = ? AND d.ModelYear = ?
-                GROUP BY d.ServiceCode, s.description
+                GROUP BY d.ServiceCode, s.ShortDescription
                 ORDER BY serviceCount DESC
                 LIMIT 3
                 """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new ModelServiceAnalytics(
                 rs.getInt("ServiceCode"),
-                rs.getString("description")
+                rs.getString("ShortDescription")
         ), modelId, modelYear);
     }
 
