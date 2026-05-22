@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.w3c.dom.stylesheets.LinkStyle;
+
+import java.util.List;
 
 @Repository
 public interface CarModelDataRepository extends JpaRepository<CarModelData, Integer> {
@@ -29,4 +32,7 @@ public interface CarModelDataRepository extends JpaRepository<CarModelData, Inte
     Integer findModeKMLastVisit(@Param("modelId") Integer modelId, @Param("modelYear") Integer modelYear);
 
     long countByModelIdAndModelYearAndIsAgendaSchedule(Integer modelId, Integer modelYear, Integer isAgendaSchedule);
+
+    @Query(value = "SELECT modelnametable.ModelName FROM dealer_flow.modelnametable", nativeQuery = true)
+    List<String> finAllModelNameValues();
 }
