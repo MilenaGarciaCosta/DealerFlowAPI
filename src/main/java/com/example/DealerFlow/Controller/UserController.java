@@ -1,5 +1,6 @@
 package com.example.DealerFlow.Controller;
 
+import com.example.DealerFlow.Dto.CreateUserRequest;
 import com.example.DealerFlow.Model.User;
 import com.example.DealerFlow.Dto.UserDto;
 import com.example.DealerFlow.Service.UserService;
@@ -21,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody User user) {
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserRequest request) {
+        User createdUser = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.from(createdUser));
     }
 

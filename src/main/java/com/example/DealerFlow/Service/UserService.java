@@ -1,5 +1,6 @@
 package com.example.DealerFlow.Service;
 
+import com.example.DealerFlow.Dto.CreateUserRequest;
 import com.example.DealerFlow.Model.Role;
 import com.example.DealerFlow.Model.User;
 import com.example.DealerFlow.Repository.RoleRepository;
@@ -9,12 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserService {
-
-    private static final Set<String> ALLOWED_CATEGORIES = Set.of("admin", "manager", "developer");
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -32,36 +30,29 @@ public class UserService {
         this.dealerService = dealerService;
     }
 
-    public User createUser(User user) {
-        boolean emailExists = userRepository.existsByEmail(user.getEmail());
+    public User createUser(CreateUserRequest request) {
+        boolean emailExists = userRepository.existsByEmail(request.getEmail());
 
         if (emailExists) {
             throw new BadCredentialsException("Email is already registered");
         }
 
-        String category = user.getCategory();
-        if (category == null || !ALLOWED_CATEGORIES.contains(category.toLowerCase())) {
-            throw new BadCredentialsException("Category must be admin, manager or developer");
+        String roleName = request.getRoleName();
+        if (roleName == null || roleName.trim().isEmpty()) {
+            throw new BadCredentialsException("Role name is required");
         }
 
-        if (category.equalsIgnoreCase("manager")) {
-            if (user.getDealer() == null) {
-                throw new BadCredentialsException("Dealer is required for managers");
-            }
-            if (!dealerService.isDealerValid(user.getDealer())) {
-                throw new BadCredentialsException("Invalid Dealer Code");
-            }
-        } else {
-            user.setDealer(null);
-        }
+        Role role = roleRepository.findByName(roleName.toUpperCase())
+                .orElseThrow(() -> new BadCredentialsException(
+                        "Role '" + roleName + "' not found"));
 
-        Role role = roleRepository.findByName(category.toUpperCase())
-                .orElseThrow(() -> new IllegalStateException(
-                        "Role '" + category.toUpperCase() + "' not found. Did you run the role seed?"));
+        User user = new User(
+                passwordEncoder.encode(request.getPassword()),
+                request.getName(),
+                request.getEmail()
+        );
         user.setRole(role);
-
-        String encryptedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encryptedPassword);
+        user.setDealer(request.getDealer());
 
         return userRepository.save(user);
     }

@@ -29,10 +29,6 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @NotBlank(message = "Category is required")
-    @Column(nullable = false)
-    private String category;
-
     @Column(nullable = true)
     private String dealer;
 
@@ -42,11 +38,10 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    public User(String password, String name, String email, String category) {
+    public User(String password, String name, String email) {
         this.password = password;
         this.name = name;
         this.email = email;
-        this.category = category;
     }
     public User(){}
 
@@ -80,14 +75,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public String getDealer() {

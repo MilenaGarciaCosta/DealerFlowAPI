@@ -25,7 +25,7 @@ public class DealerController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('CanAccessDealer')")
+    @PreAuthorize("hasAuthority('CanViewAnalytics')")
     public ResponseEntity<List<String>> getAllDealerCodes(){
         List<String> allDealerCodes = dealerService.getAllDealerCodes();
 
@@ -33,7 +33,7 @@ public class DealerController {
     }
 
     @GetMapping("/{dealerCode}")
-    @PreAuthorize("hasAuthority('CanViewAnalytics')")
+    @PreAuthorize("hasAuthority('CanAccessDealer')")
     public ResponseEntity<DealerAnalytics> getAnalytics(@PathVariable String dealerCode,
                                                         @AuthenticationPrincipal UserDetails principal) {
 
