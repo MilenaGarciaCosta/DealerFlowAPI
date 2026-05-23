@@ -9,20 +9,30 @@ public class UserDto {
     private String email;
     private String category;
     private String dealer;
+    private String role;
 
     public UserDto() {
     }
 
-    public UserDto(Integer id, String name, String email, String category, String dealer) {
+    public UserDto(Integer id, String name, String email, String category, String dealer, String role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.category = category;
         this.dealer = dealer;
+        this.role = role;
     }
 
     public static UserDto from(User user) {
-        return new UserDto(user.getId(), user.getName(), user.getEmail(), user.getCategory(), user.getDealer());
+        String roleName = user.getRole() != null ? user.getRole().getName() : null;
+        return new UserDto(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getCategory(),
+                user.getDealer(),
+                roleName
+        );
     }
 
     public Integer getId() {
@@ -63,5 +73,13 @@ public class UserDto {
 
     public void setDealer(String dealer) {
         this.dealer = dealer;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

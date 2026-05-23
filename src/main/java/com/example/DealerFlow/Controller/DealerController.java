@@ -5,6 +5,7 @@ import com.example.DealerFlow.Service.DealerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class DealerController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('CanAccessDealer')")
     public ResponseEntity<List<String>> getAllDealerCodes(){
         List<String> allDealerCodes = dealerService.getAllDealerCodes();
 
@@ -31,6 +33,7 @@ public class DealerController {
     }
 
     @GetMapping("/{dealerCode}")
+    @PreAuthorize("hasAuthority('CanViewAnalytics')")
     public ResponseEntity<DealerAnalytics> getAnalytics(@PathVariable String dealerCode,
                                                         @AuthenticationPrincipal UserDetails principal) {
 
