@@ -4,8 +4,6 @@ DealerFlow é uma API RESTful desenvolvida em Java com Spring Boot, projetada se
 
 Este projeto foi desenvolvido para a entrega da SPRINT 1 da disciplina Arquitetura Orientada a Serviços e Web Services. 
 
----
-
 ## Integrantes do Grupo
 
 *   Gabriel Luni Nakashima - RM558096
@@ -14,7 +12,6 @@ Este projeto foi desenvolvido para a entrega da SPRINT 1 da disciplina Arquitetu
 *   Renan Simões Gonçalves - RM555584
 *   Vinicius Vilas Boas - RM557843
 
----
 
 ## Tecnologias Utilizadas
 
@@ -26,7 +23,6 @@ Este projeto foi desenvolvido para a entrega da SPRINT 1 da disciplina Arquitetu
 *   **Jakarta Validation** (Validação de DTOs)
 *   **SLF4J** (Logging)
 
----
 
 ## Arquitetura e Estrutura do Projeto
 
@@ -41,9 +37,10 @@ O projeto segue um padrão de arquitetura em camadas, garantindo a separação d
 *   `Exception`: Tratamento global de erros (`GlobalExceptionHandler`).
 
 **Diagrama de Arquitetura:**
-![Diagrama de Arquitetura](images/diagrama.png)
 
----
+<div align="center">
+  <img src="images/diagrama.png" width="700" alt="Diagrama de Arquitetura">
+</div>
 
 ## Endpoints da API
 
@@ -60,7 +57,10 @@ Abaixo estão os endpoints disponíveis organizados por domínio. *Nota: Endpoin
     *   **Resposta:** `UserDto`.
 
 **Exemplo de Resposta (JSON):**
-![Exemplo de Resposta de Registro](images/registro.png)
+
+<div align="center">
+  <img src="images/registro.png" width="700" alt="Exemplo de Resposta de Registro">
+</div>
 
 ### Autenticação (`/auth`)
 
@@ -71,7 +71,10 @@ Abaixo estão os endpoints disponíveis organizados por domínio. *Nota: Endpoin
 
 
 **Exemplo de Resposta (JSON):**
-![Exemplo de Resposta de Autencicacao](images/autenticacao.png)
+
+<div align="center">
+  <img src="images/autenticacao.png" width="700" alt="Exemplo de Resposta de Autencicacao">
+</div>
 
 ### Dados de Modelos de Carros (`/car-data`)
 
@@ -84,7 +87,10 @@ Abaixo estão os endpoints disponíveis organizados por domínio. *Nota: Endpoin
     *   **Resposta:** `CarModelAnalyticsDto`.
 
 **Exemplo de Resposta (JSON):**
-![Exemplo de Resposta de Carro](images/carro.png)
+
+<div align="center">
+  <img src="images/carro.png" width="700" alt="Exemplo de Resposta de Carro">
+</div>
 
 ### Concessionárias (`/dealer`)
 
@@ -97,8 +103,10 @@ Abaixo estão os endpoints disponíveis organizados por domínio. *Nota: Endpoin
     *   **Resposta:** `DealerAnalytics`.
 
 **Exemplo de Resposta (JSON):**
-![Exemplo de Resposta de Concessionaria](images/concessionaria.png)
----
+
+<div align="center">
+  <img src="images/concessionaria.png" width="700" alt="Exemplo de Resposta de Concessionaria">
+</div>
 
 ## 🚀 Como Executar o Projeto
 
