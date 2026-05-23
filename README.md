@@ -108,7 +108,7 @@ Abaixo estão os endpoints disponíveis organizados por domínio. *Nota: Endpoin
   <img src="images/concessionaria.png" width="700" alt="Exemplo de Resposta de Concessionaria">
 </div>
 
-## 🚀 Como Executar o Projeto
+## Como Executar o Projeto
 
 1. Clone o repositório.
 2. Configure as variáveis de ambiente no arquivo `application.properties` na pasta `resources` (credenciais de banco de dados, chaves secretas do JWT).
