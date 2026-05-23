@@ -49,7 +49,7 @@ public class CarModelDataController {
                     .body(Map.of("message", "Model or year does not exists on database"));
         }
 
-        log.info("Returning: {}", result.getModelName());
+        log.info("Returning car data for car model {}", result.getModelName());
 
         return ResponseEntity.ok(result);
     }
