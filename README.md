@@ -22,6 +22,8 @@ Este projeto foi desenvolvido para a entrega da SPRINT 1 da disciplina Arquitetu
 *   **Spring Data JPA** (Persistência de dados)
 *   **Jakarta Validation** (Validação de DTOs)
 *   **SLF4J** (Logging)
+*   **JUnit 5** (Testes).
+*   **Mockito** (Simular Banco de Dados)
 
 
 ## Arquitetura e Estrutura do Projeto
@@ -107,6 +109,21 @@ Abaixo estão os endpoints disponíveis organizados por domínio. *Nota: Endpoin
 <div align="center">
   <img src="images/concessionaria.png" width="700" alt="Exemplo de Resposta de Concessionaria">
 </div>
+
+## Testes Automatizados
+
+A API possui um bloco de testes unitários dedicada a validar os comportamentos centrais do sistema, garantindo a estabilidade das regras de negócio sem a necessidade de levantar o contexto completo da aplicação.
+
+**O que foi testado:**
+* **Módulos Cobertos:** `Auth`, `User`, `Dealer` e `CarModelData` (Camadas de Controller e Service).
+* **Cenários de Sucesso:** Validação de lógicas de negócio, cálculos matemáticos, integrações e retornos HTTP corretos (200 OK, 201 Created).
+* **Cenários de Erro:** Comportamento da API diante de dados inexistentes no banco (404 Not Found).
+* **Acesso Não Autorizado:** Bloqueios de segurança, e-mails duplicados e credenciais inválidas (401 Unauthorized / `BadCredentialsException`).
+
+**Como Executar os Testes (Gerando Relatório de Cobertura):**
+1. No IntelliJ IDEA, navegue até o diretório `src/test/java`.
+2. Clique com o botão direito na pasta raiz dos testes.
+3. Selecione **"Run 'Tests in 'Java'"**.
 
 ## Como Executar o Projeto
 

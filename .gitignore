@@ -25,3 +25,9 @@ replay_pid*
 
 # Local secrets (JWT, etc.) — copy from application-local.properties.example
 src/main/resources/application-local.properties
+
+# Temporary files
+target/
+
+# IDE Config
+.idea/
