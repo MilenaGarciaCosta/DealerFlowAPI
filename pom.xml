@@ -113,10 +113,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>3.25.3</version>
-			<scope>test</scope>
+			<groupId>com.microsoft.azure</groupId>
+			<artifactId>applicationinsights-runtime-attach</artifactId>
+			<version>3.5.4</version>
 		</dependency>
 	</dependencies>
 

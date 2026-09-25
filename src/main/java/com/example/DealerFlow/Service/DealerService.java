@@ -2,6 +2,8 @@ package com.example.DealerFlow.Service;
 
 import com.example.DealerFlow.Dto.DealerAnalytics;
 import com.example.DealerFlow.Dto.ServiceAnalytics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class DealerService {
 
+    private static final Logger log = LoggerFactory.getLogger(DealerService.class);
     private final JdbcTemplate jdbcTemplate;
 
     public DealerService(JdbcTemplate jdbcTemplate) {
@@ -87,6 +90,8 @@ public class DealerService {
     }
 
     public DealerAnalytics buildAnalyticsForDealer(String dealerCode) {
+
+        log.info("ANALYTICS_REQUEST: Construindo relatórios analíticos para o dealerCode: {}", dealerCode);
         List<ServiceAnalytics> topServices = getTopServicesForDealer(dealerCode);
 
         List<Integer> codes = topServices.stream()
@@ -104,6 +109,7 @@ public class DealerService {
                 ))
                 .toList();
 
+        log.info("ANALYTICS_SUCCESS: Relatório gerado com sucesso para o dealerCode: {}", dealerCode);
         return new DealerAnalytics(dealerCode, enriched);
     }
 }
