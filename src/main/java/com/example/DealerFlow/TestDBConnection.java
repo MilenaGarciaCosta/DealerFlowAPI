@@ -9,7 +9,7 @@ public class TestDBConnection {
             Connection conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/dealer_flow",
                     "root",
-                    "root"
+                    "@Guta231"
             );
 
             System.out.println("Connection stablished!");
