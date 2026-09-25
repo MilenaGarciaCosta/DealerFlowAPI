@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,7 +35,39 @@ public class GlobalExceptionHandler {
                         FieldError::getDefaultMessage,
                         (a, b) -> a));
         log.warn("VALIDATION_FAILURE: Requisição rejeitada por dados inválidos: {}", errors);
-        return ResponseEntity.badRequest().body(Map.of("erro:", errors));
+        return ResponseEntity.badRequest().body(Map.of("errors", errors));
+    }
+
+    @ExceptionHandler(ConsultInputException.class)
+    public ResponseEntity<Map<String, String>> handleConsultInput(ConsultInputException ex) {
+        log.warn("VALIDATION_FAILURE: Requisição rejeitada por parâmetro inválido. Motivo: {}", ex.getMessage());
+        return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(PythonApiException.class)
+    public ResponseEntity<Map<String, String>> handlePythonApi(PythonApiException ex) {
+        if (ex.getStatus().is5xxServerError()) {
+            log.error("PYTHON_API_FAILURE: Falha ao consultar a API Python. Status: {}. Motivo: {}",
+                    ex.getStatus().value(), ex.getMessage(), ex);
+        } else {
+            log.warn("PYTHON_API_FAILURE: Recurso não encontrado na API Python. Status: {}. Motivo: {}",
+                    ex.getStatus().value(), ex.getMessage());
+        }
+
+        return ResponseEntity.status(ex.getStatus()).body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, String>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        log.warn("VALIDATION_FAILURE: Tipo de parâmetro inválido: {}", ex.getMessage());
+        return ResponseEntity.badRequest().body(Map.of("message", "Invalid request parameter"));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Map<String, String>> handleMissingParameter(
+            MissingServletRequestParameterException ex) {
+        log.warn("VALIDATION_FAILURE: Parâmetro obrigatório ausente: {}", ex.getParameterName());
+        return ResponseEntity.badRequest().body(Map.of("message", "Required request parameter is missing"));
     }
 
     @ExceptionHandler(Exception.class)

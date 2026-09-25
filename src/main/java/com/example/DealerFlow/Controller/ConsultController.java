@@ -54,6 +54,9 @@ public class ConsultController {
         if (value == null || value <= 0) {
             throw new ConsultInputException(parameter + " must be greater than zero");
         }
+        if (value > 200){
+            throw new ConsultInputException(parameter + " Parameter value very high");
+        }
     }
 
     private void validateHash(String vinHash) {

@@ -10,7 +10,7 @@ import java.time.Duration;
 @ConfigurationProperties(prefix = "python-api")
 public class PythonApiProperties {
 
-    private URI baseUrl = URI.create("http://172.16.0.4:4242");
+    private URI baseUrl;
     private Duration connectTimeout = Duration.ofSeconds(2);
     private Duration readTimeout = Duration.ofSeconds(10);
 
