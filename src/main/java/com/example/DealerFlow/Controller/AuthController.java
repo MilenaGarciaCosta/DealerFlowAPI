@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    private static final Logger log = LoggerFactory.getLogger(DealerController.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -25,8 +26,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        log.info("AUTH_ATTEMPT: Iniciando processo de login...");
 
-        log.info("Login user...");
-        return ResponseEntity.ok(authService.login(request));
+        try {
+            AuthResponse response = authService.login(request);
+            log.info("AUTH_SUCCESS: Login concluído com sucesso e token gerado para o email: {}", request.getEmail());
+            return ResponseEntity.ok(response);
+        } catch (AuthenticationException e) {
+            log.warn("AUTH_FAILED: Tentativa de login barrada. Credenciais inválidas para o email: {}", request.getEmail());
+            throw e;
+        }
     }
 }

@@ -31,7 +31,6 @@ Este projeto foi desenvolvido para a entrega da SPRINT 1 da disciplina Arquitetu
 O projeto segue um padrão de arquitetura em camadas, garantindo a separação de responsabilidades:
 
 *   `Controller`: Gerencia as requisições HTTP e define os endpoints da API.
-*   `Client`: Gerencia a comunicação com APIs externas, como a API Python.
 *   `Service`: Contém a regra de negócio central da aplicação (SOA).
 *   `Repository`: Interfaces para acesso ao banco de dados via Spring Data.
 *   `Model`: Entidades que mapeiam as tabelas do banco de dados.
@@ -111,61 +110,12 @@ Abaixo estão os endpoints disponíveis organizados por domínio. *Nota: Endpoin
   <img src="images/concessionaria.png" width="700" alt="Exemplo de Resposta de Concessionaria">
 </div>
 
-### Consultas à API Python (`/consult` e `/top-leads`)
-
-A API Java consome a API Python configurada em `python-api.base-url` e exige um JWT válido em todas as rotas abaixo. O token deve ser enviado no cabeçalho `Authorization`:
-
-```http
-Authorization: Bearer <token>
-```
-
-Endpoints disponíveis:
-
-*   **GET** `/consult/ID/{number}`
-*   **GET** `/consult/MaintenanceID/{maintenanceId}`
-*   **GET** `/consult/VIN_Hash/{vinHash}`
-*   **GET** `/top-leads?qtf={qtf}`
-
-As respostas de consulta individual retornam `status`, `ID`, `VIN_Hash` e `propensity_score`. A resposta de `/top-leads` retorna `status` e uma lista em `top_leads`, com os mesmos três campos de resultado em cada item. O `propensity_score` retornado pela API Python é convertido para porcentagem numérica, com quatro casas decimais. Por exemplo, `0.012735` é retornado como `1.2735`.
-
-Exemplo de resposta individual:
-
-```json
-{
-  "status": "success (via database)",
-  "ID": 1,
-  "VIN_Hash": "6ab46c8486b5724f108c8c941d49755f88892d6d84fedeb7878b9f26d28d2cb6",
-  "propensity_score": 1.2735
-}
-```
-
-Exemplo de resposta de `/top-leads`:
-
-```json
-{
-  "status": "success",
-  "top_leads": [
-    {
-      "ID": 240713,
-      "VIN_Hash": "9d15013d777bce160aa9a7307db09bc2f51d33b2d7a9abb90f69d7c0e1554444",
-      "propensity_score": 74.6119
-    }
-  ]
-}
-```
-
-A URL da API Python pode ser alterada sem recompilar o projeto:
-
-```properties
-python-api.base-url=${PYTHON_API_BASE_URL:http://172.16.0.4:4242}
-```
-
 ## Testes Automatizados
 
 A API possui um bloco de testes unitários dedicada a validar os comportamentos centrais do sistema, garantindo a estabilidade das regras de negócio sem a necessidade de levantar o contexto completo da aplicação.
 
 **O que foi testado:**
-* **Módulos Cobertos:** `Auth`, `User`, `Dealer`, `CarModelData` e `Consult` (Camadas de Controller e Service).
+* **Módulos Cobertos:** `Auth`, `User`, `Dealer` e `CarModelData` (Camadas de Controller e Service).
 * **Cenários de Sucesso:** Validação de lógicas de negócio, cálculos matemáticos, integrações e retornos HTTP corretos (200 OK, 201 Created).
 * **Cenários de Erro:** Comportamento da API diante de dados inexistentes no banco (404 Not Found).
 * **Acesso Não Autorizado:** Bloqueios de segurança, e-mails duplicados e credenciais inválidas (401 Unauthorized / `BadCredentialsException`).
