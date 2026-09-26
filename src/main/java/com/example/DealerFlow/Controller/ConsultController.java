@@ -46,15 +46,19 @@ public class ConsultController {
     @GetMapping("/top-leads")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<TopLeadsResponseDto> getTopLeads(@RequestParam("qtf") Long qtf) {
-        validatePositive(qtf, "qtf");
+        validatePositive(qtf, "qtf", 200L);
         return ResponseEntity.ok(consultService.getTopLeads(qtf));
     }
 
     private void validatePositive(Long value, String parameter) {
+        validatePositive(value, parameter, null);
+    }
+
+    private void validatePositive(Long value, String parameter, Long max) {
         if (value == null || value <= 0) {
             throw new ConsultInputException(parameter + " must be greater than zero");
         }
-        if (value > 200){
+        if (max != null && value > max) {
             throw new ConsultInputException(parameter + " Parameter value very high");
         }
     }
