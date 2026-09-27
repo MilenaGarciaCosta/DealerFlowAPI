@@ -178,6 +178,6 @@ A API possui um bloco de testes unitários dedicada a validar os comportamentos 
 ## Como Executar o Projeto
 
 1. Clone o repositório.
-2. Configure as variáveis de ambiente no arquivo `application.properties` na pasta `resources` (credenciais de banco de dados, chaves secretas do JWT).
+2. Na pasta `resources`, Crie o arquivo `application-local.properties` e configure as variáveis de ambiente no arquivo (credenciais de banco de dados, chaves secretas do JWT).
 3. Execute a classe principal `DealerFlowApplication.java` pela sua IDE.
 4. Utilize um cliente HTTP de sua preferência, como o Postman ou Insomnia, para testar os endpoints.
