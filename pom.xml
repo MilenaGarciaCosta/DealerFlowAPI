@@ -38,6 +38,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>3.1.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -169,6 +174,33 @@
 					</execution>
 				</executions>
 			</plugin>
+		    <plugin>
+		        <groupId>com.microsoft.azure</groupId>
+		        <artifactId>azure-webapp-maven-plugin</artifactId>
+		        <version>2.14.1</version>
+		        <configuration>
+		            <schemaVersion>v2</schemaVersion>
+		            <resourceGroup>dealerflow</resourceGroup>
+		            <appName>dealerflow</appName>
+		            <pricingTier>B1</pricingTier>
+		            <region>Mexico Central</region>
+		            <runtime>
+		                <os>Linux</os>
+		                <javaVersion>Java 17</javaVersion>
+		                <webContainer>Java SE</webContainer>
+		            </runtime>
+		            <deployment>
+		                <resources>
+		                    <resource>
+		                        <directory>${project.basedir}/target</directory>
+		                        <includes>
+		                            <include>*.jar</include>
+		                        </includes>
+		                    </resource>
+		                </resources>
+		            </deployment>
+		        </configuration>
+		    </plugin>
 		</plugins>
 	</build>
 

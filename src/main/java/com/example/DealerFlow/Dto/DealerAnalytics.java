@@ -1,10 +1,15 @@
 package com.example.DealerFlow.Dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
+@Schema(name = "AnaliseConcessionaria", description = "Indicadores e serviços em destaque para uma concessionária.")
 public class DealerAnalytics {
 
+    @Schema(description = "Código da concessionária analisada.", example = "DLR-001")
     private String dealerCode;
+
+    @Schema(description = "Serviços com melhor desempenho para a concessionária.")
     private List<ServiceAnalytics> topServices;
 
     public DealerAnalytics() {

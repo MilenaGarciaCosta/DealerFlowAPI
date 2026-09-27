@@ -49,11 +49,27 @@ O projeto segue um padrão de arquitetura em camadas, garantindo a separação d
 
 Abaixo estão os endpoints disponíveis organizados por domínio. *Nota: Endpoints protegidos requerem o envio do token JWT no cabeçalho `Authorization: Bearer <token>`.*
 
+### Documentação interativa (Swagger)
+
+Com a API em execução local, a documentação interativa está disponível em:
+
+* **Swagger UI:** [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+* **Especificação OpenAPI em JSON:** [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+Para testar operações protegidas pela interface:
+
+1. Execute `POST /auth/login` com `email` e `password` válidos.
+2. Copie o valor de `token` retornado. O endpoint de login e o cadastro em `POST /user` são públicos.
+3. Na Swagger UI, clique em **Authorize** e informe somente o token JWT no campo `BearerAuth`; não digite o prefixo `Bearer` nesse campo.
+4. Execute a operação desejada. A interface adicionará o cabeçalho `Authorization: Bearer <token>`; os endpoints continuam sujeitos às permissões exigidas pela API.
+
+A Swagger UI e a especificação OpenAPI são públicas para consulta. Isso não libera os endpoints de negócio: operações protegidas ainda exigem autenticação e, quando aplicável, a authority indicada na documentação.
+
 ### Usuários (`/user`)
 
 *   **POST** `/user`
     *   **Descrição:** Cria um novo usuário no sistema.
-    *   **Corpo da Requisição (JSON):** Dados do usuário (`User`).
+  *   **Corpo da Requisição (JSON):** Dados do usuário (`CreateUserRequest`): nome, e-mail, senha, `roleName` e `dealer` opcional.
     *   **Resposta:** `UserDto` criado (Status 201 Created).
 *   **GET** `/user/me`
     *   **Descrição:** Retorna as informações do usuário atualmente autenticado.

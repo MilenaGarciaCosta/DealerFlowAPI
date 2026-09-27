@@ -1,24 +1,33 @@
 package com.example.DealerFlow.Dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
+@Schema(name = "AnaliseModeloVeiculo", description = "Indicadores agregados de um modelo de veículo em determinado ano.")
 public class CarModelAnalyticsDto {
+    @Schema(description = "Identificador do modelo.", example = "12")
     private Integer modelId;
+    @Schema(description = "Nome do modelo.", example = "City")
     private String modelName;
+    @Schema(description = "Ano analisado.", example = "2024")
     private Integer year;
+    @Schema(description = "Quantidade de registros considerados.", example = "184")
     private long count;
+    @Schema(description = "Moda de dias desde a última visita.", example = "180")
     private Integer modeDaysLastVisit;
+    @Schema(description = "Moda da quilometragem desde a última visita.", example = "10000")
     private Integer modeKMLastVisit;
+    @Schema(description = "Percentual de atendimentos agendados.", example = "72.5")
     private double scheduledPercentage;
+    @Schema(description = "Percentual de atendimentos não agendados.", example = "27.5")
     private double notScheduledPercentage;
 
-    // CORREÇÃO: Alterado de ServiceAnalytics para ModelServiceAnalytics
+    @Schema(description = "Serviços mais frequentes para o modelo e ano.")
     private List<ModelServiceAnalytics> topServices;
 
     public CarModelAnalyticsDto() {
     }
 
-    // CORREÇÃO: O construtor agora recebe List<ModelServiceAnalytics>
     public CarModelAnalyticsDto(Integer modelId, String modelName, Integer year, long count, Integer modeDaysLastVisit, Integer modeKMLastVisit, double scheduledPercentage, double notScheduledPercentage, List<ModelServiceAnalytics> topServices) {
         this.modelId = modelId;
         this.modelName = modelName;
@@ -55,7 +64,6 @@ public class CarModelAnalyticsDto {
     public double getNotScheduledPercentage() { return notScheduledPercentage; }
     public void setNotScheduledPercentage(double notScheduledPercentage) { this.notScheduledPercentage = notScheduledPercentage; }
 
-    // CORREÇÃO: Getters e Setters atualizados para ModelServiceAnalytics
     public List<ModelServiceAnalytics> getTopServices() { return topServices; }
     public void setTopServices(List<ModelServiceAnalytics> topServices) { this.topServices = topServices; }
 }

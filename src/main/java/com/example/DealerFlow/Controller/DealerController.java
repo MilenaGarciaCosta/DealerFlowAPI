@@ -2,6 +2,11 @@ package com.example.DealerFlow.Controller;
 
 import com.example.DealerFlow.Dto.DealerAnalytics;
 import com.example.DealerFlow.Service.DealerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/dealer")
+@Tag(name = "Concessionárias", description = "Códigos de concessionárias e indicadores de desempenho.")
 public class DealerController {
 
     private static final Logger log = LoggerFactory.getLogger(DealerController.class);
@@ -26,6 +32,12 @@ public class DealerController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('CanViewAnalytics')")
+    @Operation(summary = "Listar códigos de concessionárias", description = "Retorna os códigos cadastrados. Requer a authority CanViewAnalytics.", security = @SecurityRequirement(name = "BearerAuth"))
+        @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Códigos retornados."),
+            @ApiResponse(responseCode = "401", description = "Token ausente ou inválido."),
+            @ApiResponse(responseCode = "403", description = "Usuário sem a authority CanViewAnalytics.")
+        })
     public ResponseEntity<List<String>> getAllDealerCodes(){
         List<String> allDealerCodes = dealerService.getAllDealerCodes();
 
@@ -34,6 +46,12 @@ public class DealerController {
 
     @GetMapping("/{dealerCode}")
     @PreAuthorize("hasAuthority('CanAccessDealer')")
+    @Operation(summary = "Consultar análise da concessionária", description = "Retorna indicadores e principais serviços do código informado. Requer a authority CanAccessDealer.", security = @SecurityRequirement(name = "BearerAuth"))
+        @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Análise da concessionária retornada."),
+            @ApiResponse(responseCode = "401", description = "Token ausente ou inválido."),
+            @ApiResponse(responseCode = "403", description = "Usuário sem a authority CanAccessDealer.")
+        })
     public ResponseEntity<DealerAnalytics> getAnalytics(@PathVariable String dealerCode,
                                                         @AuthenticationPrincipal UserDetails principal) {
 

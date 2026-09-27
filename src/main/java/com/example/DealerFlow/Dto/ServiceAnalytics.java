@@ -1,10 +1,20 @@
 package com.example.DealerFlow.Dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(name = "AnaliseServico", description = "Métricas de tempo de execução de um serviço.")
 public class ServiceAnalytics {
 
+    @Schema(description = "Código do serviço.", example = "120")
     private int serviceCode;
+
+    @Schema(description = "Descrição do serviço.", example = "Revisão preventiva")
     private String serviceDescription;
+
+    @Schema(description = "Média de horas do serviço na concessionária.", example = "3")
     private int averageHours;
+
+    @Schema(description = "Média global de horas para o serviço.", example = "4")
     private int globalAverageHours;
 
     public ServiceAnalytics() {

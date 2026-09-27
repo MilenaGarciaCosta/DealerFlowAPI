@@ -1,13 +1,24 @@
 package com.example.DealerFlow.Dto;
 
 import com.example.DealerFlow.Model.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(name = "Usuario", description = "Dados públicos de um usuário. A senha não faz parte deste modelo.")
 public class UserDto {
 
+    @Schema(description = "Identificador do usuário.", example = "42")
     private Integer id;
+
+    @Schema(description = "Nome do usuário.", example = "Ana Souza")
     private String name;
+
+    @Schema(description = "E-mail do usuário.", example = "ana.souza@exemplo.com")
     private String email;
+
+    @Schema(description = "Código da concessionária associada, quando houver.", example = "DLR-001", nullable = true)
     private String dealer;
+
+    @Schema(description = "Nome do perfil de acesso.", example = "ADMIN", nullable = true)
     private String role;
 
     public UserDto() {
